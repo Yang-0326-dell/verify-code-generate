@@ -1,0 +1,91 @@
+#include <iostream>
+
+using namespace std;
+#include <string>
+#include <time.h> 
+#pragma warning( disable : 4996 )
+
+long long gettime(long long code)
+{
+	time_t rawtime;
+	struct tm* ptminfo;
+	time(&rawtime);
+	ptminfo = localtime(&rawtime);
+	printf("current: %02d-%02d-%02d %02d:%02d:%02d\n",
+		ptminfo->tm_year + 1900, ptminfo->tm_mon + 1, ptminfo->tm_mday,
+		ptminfo->tm_hour, ptminfo->tm_min, ptminfo->tm_sec);
+	long r1;
+	long r2;
+	long r3;
+	long r4;
+	long r5;
+	long r6;
+	long r7;
+	long long* r = &code;
+	int y = ptminfo->tm_year + 1900;
+	int d = ptminfo->tm_mday;
+	int m = ptminfo->tm_mon + 1;
+
+	int mode1 = (m + d) % 11;
+	if ((d - y) % mode1 == 1 || (d - y) % mode1 == 4 || (d - y) % mode1 == 3) {
+		if (d > m) {
+			r1 = (d - m) * y;
+		}
+		else {
+			r1 = (m - d) * y;
+		}
+
+		r2 = y - d - m;
+		r3 = y + d + m;
+		r4 = y / d + d / m + m / d + y * m;
+		r5 = pow(y, d);
+		r6 = pow(y, r3 % 50);
+		r7 = pow(d, (y % m % 50));
+		*r = r1 * r2 - r4 / r3 - 2006 + 326 * r5 + r6 + r7;
+	}
+	else if ((d - y) % mode1 == 0 || (d - y) % mode1 == 3) {
+		if (d > m) {
+			r3 = (d - m) * y;
+		}
+		else {
+			r3 = (m - d) * y;
+		}
+
+		r2 = y - d - m;
+		r4 = y + d + m;
+		r6 = y / d + d / m + m / d + y * m;
+		r7 = pow(y, d);
+		r1 = pow(y, r3 % 50);
+		r5 = pow(d, (y % m % 50));
+		*r = r1 * r2 - r4 / r3 - 2006 + 326 * r5 + r6 + r7;
+	}
+	else {
+		if (d > m) {
+			r6 = (d - m) * y;
+		}
+		else {
+			r6 = (m - d) * y;
+		}
+
+		r5 = y - d - m;
+		r1 = y + d + m;
+		r4 = y / d + d / m + m / d + y * m;
+		r2 = pow(y, d);
+		r3 = pow(d, (y % m % 50));
+		r7 = pow(y, r3 % 50);
+		*r = r1 * r2 - r4 / r3 - 2006 + 326 * r5 + r6 + r7;
+	}
+	if (*r <= 0) {
+		*r -= 2 * *r;
+	}
+	*r %= 10000000;
+	cout << *r;
+	return code;
+}
+
+int main() {
+	long long code = 19700101;
+	gettime(code);
+	system("pause");
+	return 0;
+}
